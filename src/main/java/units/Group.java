@@ -2,21 +2,21 @@ package units;
 
 import java.util.HashSet;
 
-public class Squad extends HashSet<Unit> implements Voisko {
+public class Group extends HashSet<Squad> implements Voisko {
     private Voisko voisko;
 
-    public Squad(int count) {
+    public Group(){
         super();
     }
 
     @Override
-    public boolean add(Unit unit) {
-        return this.add(unit);
-    }
+     public boolean add(Squad squad){
+        return this.add(squad);
+     }
 
-    public void remove(Unit unit){
-         this.remove(unit);
-    }
+    public boolean remove(Squad squad){
+        return this.remove(squad);
+     }
 
 
     @Override
