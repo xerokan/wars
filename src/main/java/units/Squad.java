@@ -1,11 +1,11 @@
 package units;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Squad extends HashSet<Unit> implements Voisko {
     private Voisko voisko;
-
-    public Squad(int count) {
+    public Squad() {
         super();
     }
 
