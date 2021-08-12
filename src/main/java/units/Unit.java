@@ -1,20 +1,24 @@
 package units;
 
+import units.Landshaft.Land;
+
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
 public class Unit extends Observable implements Observer, Voisko {
     private Voisko voisko;
-    public int[] land = new int[4];
-    private boolean capCon;
+    public Land land;
+    public Squad squad;
+    public boolean capCon;
     private boolean unitCon;
     public int view = 2;
     public int hear = 4;
 
-    public  Unit(Observable obs, int[][] pos){
-        obs.addObserver(this);
+    public  Unit(Land land, Boolean capCon){
         this.unitCon = false;
+        this.capCon = capCon;
+        this.land = land;
     }
 
     public Unit() {
@@ -25,34 +29,42 @@ public class Unit extends Observable implements Observer, Voisko {
         this.capCon = capCon;
     }
 
-    public void checkPlace(int right,int left, int down,int up){
-        land[0] = right;
-        land[1] = left;
-        land[2] = down;
-        land[3] = up;
+    public Land checkPlace(){
+        System.out.println("right = "+this.land.right+" left = "+this.land.left+" up = "+this.land.up+" down = "+ this.land.down);
+        return this.land;
     }
 
     @Override
     public void update(Observable cap, Object arg){
-        System.out.println(this.land);
-    }
-
-    public boolean tryToCon(Squad squad){
-        if (this.unitCon == false){
-            Iterator iter = squad.iterator();
-            while (iter.hasNext()){
-                if ((((Unit) iter.next()).capCon == true) || (((Unit) iter.next()).unitCon == true)){
-                    ((Unit) iter.next()).addObserver(this);
-                    this.unitCon = true;
-                    return true;
-                }
-            }
-            while (iter.hasNext()){
-
-            }
-
+        if (arg == "delete"){
+            setChanged();
+            this.notifyObservers(arg);
+            this.deleteObservers();
+            System.out.println("obs deleted");
+        }
+        if (arg == "land"){
+            setChanged();
+           this.notifyObservers(arg);
+            this.squad.landshaft.add(this.checkPlace());
         }
     }
+
+    public boolean tryToCon(Squad squad) {
+        setChanged();
+        this.notifyObservers("delete");
+        this.deleteObservers();
+        for (Unit unit : squad){
+            if (!(unit instanceof Capitan) && (unit.capCon == true || unit.unitCon == true )){
+                unit.addObserver(this);
+                this.unitCon = true;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 
 
     @Override
