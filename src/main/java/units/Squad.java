@@ -10,17 +10,17 @@ import java.util.Map;
 public class Squad extends HashSet<Unit> implements Voisko {
     private Voisko voisko;
     public  Capitan cap;
-    public Landshaft landshaft = new Landshaft();
+    public Landshaft landshaft;
 
     public Squad() {
         super();
     }
 
-    public Landshaft checkPlace(){
-        cap.takeLandInform();
-        System.out.println(this.landshaft) ;
-        return this.landshaft;
-    }
+//    public Landshaft checkPlace(){
+//        cap.takeLandInform();
+//        System.out.println(this.landshaft) ;
+//        return this.landshaft;
+//    }
 
 
     @Override
