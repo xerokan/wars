@@ -10,23 +10,18 @@ public class Capitan extends Unit {
 
 
     public Capitan(Dot dot) {
-    this.position = dot;
+        super(dot);
+        this.position = dot;
     }
 
-    public void takeLandInform(){
-        setChanged();
-//        this.squad.landshaft.add(this.checkPlace());
-        this.notifyObservers("land");
+    @Override
+    public Landshaft checkLand(){
+        this.setChanged();
+        this.notifyObservers(Comands.Land);
+        return super.checkLand();
     }
 
-//    public void giveAComand  (String com){
-//        this.command = com;
-//        setChanged();
-//        this.notifyObservers(command);
-//    }
-
-//    @Override
-//    public void update(Observable may, Object arg){
-//        giveAComand((String)arg);
-//    }
+    @Override
+    public void update(Observable may, Object arg){
+    }
 }

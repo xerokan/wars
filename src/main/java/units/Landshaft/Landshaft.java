@@ -26,6 +26,9 @@ public class Landshaft extends HashSet<Dot>{
 
     @Override
     public boolean add(Dot dot){
+        if (dot == null){
+            return false;
+        }
        return super.add(dot);
     }
 

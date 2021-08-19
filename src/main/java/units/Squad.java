@@ -10,18 +10,16 @@ import java.util.Map;
 public class Squad extends HashSet<Unit> implements Voisko {
     private Voisko voisko;
     public  Capitan cap;
-    public Landshaft landshaft;
+    public Landshaft landshaft = new Landshaft();
 
     public Squad() {
         super();
     }
 
-//    public Landshaft checkPlace(){
-//        cap.takeLandInform();
-//        System.out.println(this.landshaft) ;
-//        return this.landshaft;
-//    }
-
+    public void checkLand(){
+       this.landshaft.addAll(this.cap.checkLand());
+       System.out.println(this.landshaft);
+    }
 
     @Override
     public boolean add(Unit unit) {
@@ -43,8 +41,10 @@ public class Squad extends HashSet<Unit> implements Voisko {
     }
 
 
-    public void remove(Unit unit){
-         this.remove(unit);
+    public boolean remove(Unit unit){
+        unit.deleteObservers();
+        this.cap.deleteObserver(unit);
+        return super.remove(unit);
     }
 
 

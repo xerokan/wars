@@ -18,6 +18,10 @@ public class Dot {
         this.type = type;
     }
 
+    public boolean getType(){
+        return this.type;
+    }
+
     public int getX(){
         return this.x;
     }
