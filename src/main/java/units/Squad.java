@@ -19,6 +19,8 @@ public class Squad extends HashSet<Unit> implements Voisko {
 
     @Override
     public Landshaft checkLand(){
+        this.landshaft.clear();
+        this.tryToCon();
         this.cap.changeCap();
         this.cap.notifyObservers(Comands.Land);
         this.landshaft.addAll(this.cap.checkLand());
@@ -27,13 +29,13 @@ public class Squad extends HashSet<Unit> implements Voisko {
 
     @Override
     public boolean add(Unit unit) {
+        unit.squad = this;
         if (unit.capCon == true) {
             cap.addObserver(unit);
         } else
-           if (unit.tryToCon(this) == false){
+           if (unit.tryToCon() == false){
                System.out.println("Unit added without connection");
            }
-           unit.squad = this;
          return super.add(unit);
     }
 
@@ -67,5 +69,13 @@ public class Squad extends HashSet<Unit> implements Voisko {
             }
             System.out.println();
         }
+    }
+
+    @Override
+    public boolean tryToCon() {
+        for (Unit unit : this){
+            unit.tryToCon();
+        }
+        return true;
     }
 }

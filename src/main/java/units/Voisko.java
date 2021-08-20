@@ -8,4 +8,6 @@ public interface Voisko {
 
     public void show();
 
+    public boolean tryToCon();
+
 }

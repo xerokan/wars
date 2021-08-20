@@ -23,4 +23,9 @@ public class Capitan extends Unit {
     @Override
     public void update(Observable may, Object arg){
     }
+
+    @Override
+    public boolean tryToCon() {
+        return false;
+    }
 }

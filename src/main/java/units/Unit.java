@@ -14,7 +14,7 @@ public class Unit extends Observable implements Observer, Voisko {
     protected boolean capCon;
     protected boolean unitCon;
     public Landshaft land = new Landshaft();
-    final int view = 2;
+    final int view = 3;
 
     public Unit(Dot position) {
         super();
@@ -33,8 +33,8 @@ public class Unit extends Observable implements Observer, Voisko {
         this.land.add(Mapping.getDot(this.position.getX(), this.position.getY() - 1));
         return this.land;
     }
-
-    public boolean tryToCon(Squad squad) {
+    @Override
+    public boolean tryToCon() {
         this.deleteObservers();
         if (Math.sqrt(Math.pow(this.position.getX() - squad.cap.position.getX(), 2) + Math.pow(this.position.getY() - squad.cap.position.getY(), 2)) <= this.view) {
             this.capCon = true;
@@ -42,7 +42,7 @@ public class Unit extends Observable implements Observer, Voisko {
             return true;
         }
         for (Unit unit : squad) {
-            if (!(unit instanceof Capitan) && (unit.capCon == true || unit.unitCon == true) && (Math.sqrt(Math.pow(this.position.getX() - unit.position.getX(), 2) + Math.pow(this.position.getY() - unit.position.getY(), 2)) <= this.view)) {
+            if (!(unit instanceof Capitan) && (unit != this) && (unit.capCon == true || unit.unitCon == true) && (Math.sqrt(Math.pow(this.position.getX() - unit.position.getX(), 2) + Math.pow(this.position.getY() - unit.position.getY(), 2)) <= this.view)) {
                 unit.addObserver(this);
                 this.unitCon = true;
                 return true;
