@@ -20,7 +20,7 @@ public class Unit extends Observable implements Observer {
         this.unitCon = false;
         this.capCon = false;
         this.position = position;
-
+        Mapping.getDot(this.position.getX(), this.position.getY()).setType(2);
     }
 
     public Landshaft checkLand() {
@@ -66,5 +66,16 @@ public class Unit extends Observable implements Observer {
         this.setChanged();
         this.notifyObservers(Comands.Delete);
         super.deleteObservers();
+    }
+
+    public void show(){
+        for (int i = 0; i <= Mapping.x; i++){
+            for (int j = 0; j <= Mapping.y; j++){
+                if (this.land.contains(Mapping.getDot(j,i))){
+                    System.out.print(Mapping.getDot(j,i).getType()+"   ");
+                }else System.out.print("X   ");
+            }
+            System.out.println();
+        }
     }
 }

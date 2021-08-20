@@ -24,5 +24,11 @@ public class Start {
         }
         squad.remove(unit1);
         System.out.println(squad);
+        Mapping.show();
+        System.out.println();
+        squad.show();
+        System.out.println();
+        unit.checkLand();
+        unit.show();
     }
 }

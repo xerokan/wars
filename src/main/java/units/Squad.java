@@ -1,6 +1,7 @@
 package units;
 
 import units.Landshaft.Landshaft;
+import units.Landshaft.Mapping;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,5 +56,16 @@ public class Squad extends HashSet<Unit> implements Voisko {
 
     public void setVoisko(Voisko strat) {
         voisko = strat;
+    }
+
+    public void show(){
+        for (int i = 0; i <= Mapping.x; i++){
+            for (int j = 0; j <= Mapping.y; j++){
+               if (this.landshaft.contains(Mapping.getDot(j,i))){
+                   System.out.print(Mapping.getDot(j,i).getType()+"   ");
+               }else System.out.print("X   ");
+            }
+            System.out.println();
+        }
     }
 }
