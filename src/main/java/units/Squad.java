@@ -17,9 +17,12 @@ public class Squad extends HashSet<Unit> implements Voisko {
         super();
     }
 
-    public void checkLand(){
-       this.landshaft.addAll(this.cap.checkLand());
-       System.out.println(this.landshaft);
+    @Override
+    public Landshaft checkLand(){
+        this.cap.changeCap();
+        this.cap.notifyObservers(Comands.Land);
+        this.landshaft.addAll(this.cap.checkLand());
+        return this.landshaft;
     }
 
     @Override
@@ -49,16 +52,13 @@ public class Squad extends HashSet<Unit> implements Voisko {
     }
 
 
-    @Override
-    public void execute() {
-        voisko.execute();
-    }
-
     public void setVoisko(Voisko strat) {
         voisko = strat;
     }
 
+    @Override
     public void show(){
+        this.checkLand();
         for (int i = 0; i <= Mapping.x; i++){
             for (int j = 0; j <= Mapping.y; j++){
                if (this.landshaft.contains(Mapping.getDot(j,i))){

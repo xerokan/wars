@@ -16,11 +16,8 @@ public class Capitan extends Unit {
         Mapping.getDot(this.position.getX(), this.position.getY()).setType(3);
     }
 
-    @Override
-    public Landshaft checkLand(){
+    public void changeCap(){
         this.setChanged();
-        this.notifyObservers(Comands.Land);
-        return super.checkLand();
     }
 
     @Override

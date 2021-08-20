@@ -1,7 +1,11 @@
 package units;
 
+import units.Landshaft.Landshaft;
+
 public interface Voisko {
 
-    public void execute();
+    public Landshaft checkLand();
+
+    public void show();
 
 }

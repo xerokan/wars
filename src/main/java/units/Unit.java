@@ -7,7 +7,8 @@ import units.Landshaft.Mapping;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Unit extends Observable implements Observer {
+public class Unit extends Observable implements Observer, Voisko {
+    public Voisko strat;
     public Dot position;
     public Squad squad;
     protected boolean capCon;
@@ -23,6 +24,7 @@ public class Unit extends Observable implements Observer {
         Mapping.getDot(this.position.getX(), this.position.getY()).setType(2);
     }
 
+    @Override
     public Landshaft checkLand() {
         this.land.add(this.position);
         this.land.add(Mapping.getDot(this.position.getX() + 1, this.position.getY()));
@@ -68,6 +70,7 @@ public class Unit extends Observable implements Observer {
         super.deleteObservers();
     }
 
+    @Override
     public void show(){
         for (int i = 0; i <= Mapping.x; i++){
             for (int j = 0; j <= Mapping.y; j++){
@@ -78,4 +81,10 @@ public class Unit extends Observable implements Observer {
             System.out.println();
         }
     }
+
+    public void setStrat(Voisko strat){
+        this.strat = strat;
+    }
+
+
 }
