@@ -3,5 +3,7 @@ package Wars;
 public enum Comands {
     Delete,
     Land,
-    Move
+    Move,
+    Find,
+    EndFind
 }

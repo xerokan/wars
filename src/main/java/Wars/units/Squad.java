@@ -71,13 +71,6 @@ public class Squad extends HashSet<Unit> implements Voisko {
         for (Unit unit : this) {
             unit.tryToCon();
         }
-        for (int i =0; i<this.size();i++) {
-            for (Unit unit : this) {
-                if (unit.unitCon == false && unit.capCon == false) {
-                    unit.tryToCon();
-                }
-            }
-        }
         return true;
     }
 

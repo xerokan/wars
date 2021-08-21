@@ -37,21 +37,27 @@ public class Unit extends Observable implements Observer, Voisko {
     }
     @Override
     public boolean tryToCon() {
-        this.deleteObservers();
-        this.capCon = false;
-        this.unitCon = false;
-        if (Math.sqrt(Math.pow(this.position.getX() - squad.cap.position.getX(), 2) + Math.pow(this.position.getY() - squad.cap.position.getY(), 2)) <= this.view) {
-            this.capCon = true;
-            squad.cap.addObserver(this);
-            return true;
-        }
-        for (Unit unit : squad) {
-            if (!(unit instanceof Capitan) && (unit != this) && (unit.capCon == true || unit.unitCon == true) && (Math.sqrt(Math.pow(this.position.getX() - unit.position.getX(), 2) + Math.pow(this.position.getY() - unit.position.getY(), 2)) <= this.view)) {
-                unit.addObserver(this);
-                this.unitCon = true;
+            if (Math.sqrt(Math.pow(this.position.getX() - squad.cap.position.getX(), 2) + Math.pow(this.position.getY() - squad.cap.position.getY(), 2)) <= this.view) {
+                this.capCon = true;
+                this.unitCon = false;
+                squad.cap.addObserver(this);
+                this.deleteObservers();
                 return true;
             }
-        }
+            this.setChanged();
+            this.notifyObservers(Comands.Find);
+                for (Unit unit : squad) {
+                    if (!(unit instanceof Capitan) && (unit != this) && (unit.capCon == true || unit.unitCon == true) && (Math.sqrt(Math.pow(this.position.getX() - unit.position.getX(), 2) + Math.pow(this.position.getY() - unit.position.getY(), 2)) <= this.view)) {
+                        unit.addObserver(this);
+                        this.capCon = false;
+                        this.unitCon = true;
+                        this.setChanged();
+                        this.notifyObservers(Comands.EndFind);
+                        this.setChanged();
+                        this.deleteObservers();
+                        return true;
+                    }
+                }
         return false;
     }
 
@@ -59,6 +65,13 @@ public class Unit extends Observable implements Observer, Voisko {
     public void update(Observable cap, Object arg) {
         if (arg == Comands.Delete) {
             this.deleteObservers();
+            this.unitCon = false;
+        }
+        if (arg == Comands.Find) {
+            this.unitCon =false;
+        }
+        if (arg == Comands.EndFind) {
+            this.unitCon = true;
         }
         if (arg == Comands.Land) {
             this.setChanged();
@@ -83,6 +96,11 @@ public class Unit extends Observable implements Observer, Voisko {
         this.setChanged();
         this.notifyObservers(Comands.Delete);
         super.deleteObservers();
+        for(Unit unit : this.squad){
+            if (unit.unitCon == false && unit.capCon == false){
+                unit.tryToCon();
+            }
+        }
     }
 
     @Override
