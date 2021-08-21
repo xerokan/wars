@@ -1,9 +1,8 @@
-package units;
+package Wars.units;
 
 
-import units.Landshaft.Dot;
-import units.Landshaft.Landshaft;
-import units.Landshaft.Mapping;
+import Wars.Landshaft.Dot;
+import Wars.Landshaft.Mapping;
 
 import java.util.Observable;
 
@@ -21,6 +20,16 @@ public class Capitan extends Unit {
     }
 
     @Override
+    public void setPosition(Dot dot){
+        if (dot != null && dot.getType() == 0) {
+            dot.setType(3);
+            this.position.setType(0);
+            this.position = dot;
+        }
+        return;
+    }
+
+    @Override
     public void update(Observable may, Object arg){
     }
 
@@ -28,4 +37,5 @@ public class Capitan extends Unit {
     public boolean tryToCon() {
         return false;
     }
+
 }

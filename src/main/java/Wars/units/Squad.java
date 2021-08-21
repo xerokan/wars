@@ -1,16 +1,14 @@
-package units;
+package Wars.units;
 
-import units.Landshaft.Landshaft;
-import units.Landshaft.Mapping;
+import Wars.Comands;
+import Wars.Landshaft.Landshaft;
+import Wars.Landshaft.Mapping;
+import Wars.UStrats.Move;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 
 public class Squad extends HashSet<Unit> implements Voisko {
-    private Voisko voisko;
-    public  Capitan cap;
+    public Capitan cap;
     public Landshaft landshaft = new Landshaft();
 
     public Squad() {
@@ -30,12 +28,7 @@ public class Squad extends HashSet<Unit> implements Voisko {
     @Override
     public boolean add(Unit unit) {
         unit.squad = this;
-        if (unit.capCon == true) {
-            cap.addObserver(unit);
-        } else
-           if (unit.tryToCon() == false){
-               System.out.println("Unit added without connection");
-           }
+        unit.tryToCon();
          return super.add(unit);
     }
 
@@ -53,9 +46,11 @@ public class Squad extends HashSet<Unit> implements Voisko {
         return super.remove(unit);
     }
 
-
-    public void setVoisko(Voisko strat) {
-        voisko = strat;
+    @Override
+    public void setMove (Move move) {
+        this.cap.changeCap();
+        this.cap.setMove(move);
+        this.cap.notifyObservers(move);
     }
 
     @Override
@@ -73,9 +68,22 @@ public class Squad extends HashSet<Unit> implements Voisko {
 
     @Override
     public boolean tryToCon() {
-        for (Unit unit : this){
+        for (Unit unit : this) {
             unit.tryToCon();
         }
+        for (int i =0; i<this.size();i++) {
+            for (Unit unit : this) {
+                if (unit.unitCon == false && unit.capCon == false) {
+                    unit.tryToCon();
+                }
+            }
+        }
         return true;
+    }
+
+    public void move(){
+        this.cap.changeCap();
+        this.cap.notifyObservers(Comands.Move);
+        this.cap.move();
     }
 }

@@ -1,6 +1,7 @@
-package units;
+package Wars;
 
 public enum Comands {
     Delete,
-    Land
+    Land,
+    Move
 }

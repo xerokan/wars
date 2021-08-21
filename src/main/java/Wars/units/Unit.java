@@ -1,14 +1,16 @@
-package units;
+package Wars.units;
 
-import units.Landshaft.Dot;
-import units.Landshaft.Landshaft;
-import units.Landshaft.Mapping;
+import Wars.Comands;
+import Wars.Landshaft.Dot;
+import Wars.Landshaft.Landshaft;
+import Wars.Landshaft.Mapping;
+import Wars.UStrats.Move;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public class Unit extends Observable implements Observer, Voisko {
-    public Voisko strat;
+    protected Move move;
     public Dot position;
     public Squad squad;
     protected boolean capCon;
@@ -36,6 +38,8 @@ public class Unit extends Observable implements Observer, Voisko {
     @Override
     public boolean tryToCon() {
         this.deleteObservers();
+        this.capCon = false;
+        this.unitCon = false;
         if (Math.sqrt(Math.pow(this.position.getX() - squad.cap.position.getX(), 2) + Math.pow(this.position.getY() - squad.cap.position.getY(), 2)) <= this.view) {
             this.capCon = true;
             squad.cap.addObserver(this);
@@ -61,6 +65,17 @@ public class Unit extends Observable implements Observer, Voisko {
             this.notifyObservers(arg);
             this.squad.landshaft.addAll(this.checkLand());
         }
+        if (arg instanceof Move){
+            this.setChanged();
+            this.setMove((Move) arg);
+            this.notifyObservers(this.move);
+        }
+        if (arg == Comands.Move){
+            this.setChanged();
+            this.notifyObservers(Comands.Move);
+            this.move();
+
+        }
     }
 
     @Override
@@ -82,9 +97,21 @@ public class Unit extends Observable implements Observer, Voisko {
         }
     }
 
-    public void setStrat(Voisko strat){
-        this.strat = strat;
+    @Override
+    public void setMove(Move move){
+        this.move = move;
     }
 
+    public void setPosition(Dot dot){
+        if (dot != null && dot.getType() == 0) {
+            dot.setType(2);
+            this.position.setType(0);
+            this.position = dot;
+        }
+        return;
+    }
 
+    public void  move(){
+        this.move.move(this);
+    }
 }

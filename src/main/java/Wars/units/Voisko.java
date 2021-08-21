@@ -1,6 +1,7 @@
-package units;
+package Wars.units;
 
-import units.Landshaft.Landshaft;
+import Wars.Landshaft.Landshaft;
+import Wars.UStrats.Move;
 
 public interface Voisko {
 
@@ -9,5 +10,7 @@ public interface Voisko {
     public void show();
 
     public boolean tryToCon();
+
+    public void setMove(Move move);
 
 }

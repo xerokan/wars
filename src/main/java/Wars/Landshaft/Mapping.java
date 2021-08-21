@@ -1,4 +1,4 @@
-package units.Landshaft;
+package Wars.Landshaft;
 
 public class Mapping {
     static Dot[][] map;
@@ -34,4 +34,5 @@ public class Mapping {
             System.out.println();
         }
     }
+
 }

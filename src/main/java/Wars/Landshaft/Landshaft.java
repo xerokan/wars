@@ -1,8 +1,5 @@
-package units.Landshaft;
+package Wars.Landshaft;
 
-import javafx.scene.layout.Pane;
-
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class Landshaft extends HashSet<Dot>{

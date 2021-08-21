@@ -1,6 +1,4 @@
-package units.Landshaft;
-
-import javafx.css.StyleableProperty;
+package Wars.Landshaft;
 
 public class Dot {
     final int x;
