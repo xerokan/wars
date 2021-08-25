@@ -11,6 +11,6 @@ public interface Voisko {
 
     public boolean tryToCon();
 
-    public void setMove(Move move);
+    public void go();
 
 }

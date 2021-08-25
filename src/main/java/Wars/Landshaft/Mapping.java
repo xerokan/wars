@@ -1,5 +1,7 @@
 package Wars.Landshaft;
 
+import Wars.units.Squad;
+
 public class Mapping {
     static Dot[][] map;
     public static int x;
@@ -9,8 +11,8 @@ public class Mapping {
         map = new Dot[x][y];
         Mapping.x = x-1;
         Mapping.y = y-1;
-        for (int i = 0; i<x; i++){
-            for (int j = 0; j<y; j++){
+        for (int i = 0; i < x; i++){
+            for (int j = 0; j < y; j++){
                 Dot dot = new Dot(i,j,0);
                 map[i][j] = dot;
                 if (dot.y == dot.x){
@@ -30,6 +32,35 @@ public class Mapping {
         for (int i = 0; i <= x; i++){
             for (int j = 0; j <= y; j++){
                 System.out.print(Mapping.getDot(j,i).getType()+"   ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static Landshaft getAllDots() {
+        Landshaft land = new Landshaft();
+        for (int i = 0; i <= x; i++) {
+            for (int j = 0; j <= y; j++) {
+                land.add(Mapping.getDot(j, i));
+            }
+        }
+        return land;
+    }
+
+    public static void setMapBright(Squad squad){
+        for (int i = 0; i <= x; i++) {
+            for (int j = 0; j <= y; j++) {
+                if (squad.contains(map[j][i]) == false && map[j][i].bright <= 20) {
+                    map[j][i].bright += 1;
+                }
+            }
+        }
+    }
+
+    public static void showBright(){
+        for (int i = 0; i <= x; i++){
+            for (int j = 0; j <= y; j++){
+                System.out.print(Mapping.getDot(j,i).bright+"   ");
             }
             System.out.println();
         }

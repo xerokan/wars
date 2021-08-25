@@ -1,6 +1,7 @@
 package Wars.units;
 
 import Wars.Comands;
+import Wars.Landshaft.Dot;
 import Wars.Landshaft.Landshaft;
 import Wars.Landshaft.Mapping;
 import Wars.UStrats.Move;
@@ -8,8 +9,10 @@ import Wars.UStrats.Move;
 import java.util.HashSet;
 
 public class Squad extends HashSet<Unit> implements Voisko {
+    protected static boolean chain;
     public Capitan cap;
     public Landshaft landshaft = new Landshaft();
+    protected Landshaft findLand;
 
     public Squad() {
         super();
@@ -22,14 +25,20 @@ public class Squad extends HashSet<Unit> implements Voisko {
         this.cap.changeCap();
         this.cap.notifyObservers(Comands.Land);
         this.landshaft.addAll(this.cap.checkLand());
+        Mapping.setMapBright(this);
+        for(Dot dot : this.landshaft){
+            dot.bright = 0;
+        }
         return this.landshaft;
     }
 
     @Override
     public boolean add(Unit unit) {
         unit.squad = this;
-        unit.tryToCon();
-         return super.add(unit);
+        this.chain=true;
+        super.add(unit);
+        this.tryToCon();
+         return true;
     }
 
 
@@ -47,10 +56,10 @@ public class Squad extends HashSet<Unit> implements Voisko {
     }
 
     @Override
-    public void setMove (Move move) {
+    public void go () {
         this.cap.changeCap();
-        this.cap.setMove(move);
-        this.cap.notifyObservers(move);
+        this.cap.notifyObservers(Comands.Go);
+        this.cap.go();
     }
 
     @Override
@@ -66,17 +75,40 @@ public class Squad extends HashSet<Unit> implements Voisko {
         }
     }
 
+    public Dot findMid(){
+        int x =0;
+        int y =0;
+        for (Unit unit : this){
+            x += unit.position.getX();
+            y += unit.position.getY();
+        }
+        return Mapping.getDot( Math.round(x/this.size()),Math.round(y/this.size()));
+    }
+
+    public void setFindLand(){
+        this.findLand = new Landshaft();
+        Dot mid = this.findMid();
+        for (Dot dot : Mapping.getAllDots()){
+            if (Dot.distance(mid,dot) < (this.size()*Unit.view)){
+                this.findLand.add(dot);
+            }
+        }
+
+    }
+
     @Override
     public boolean tryToCon() {
-        for (Unit unit : this) {
-            unit.tryToCon();
+        while (this.chain) {
+            this.chain=false;
+            for (Unit unit : this) {
+                if (unit.unitCon == false && unit.capCon == false) {
+                    if (unit.tryToCon()) {
+                        this.chain = true;
+                    }
+                }
+            }
         }
         return true;
     }
 
-    public void move(){
-        this.cap.changeCap();
-        this.cap.notifyObservers(Comands.Move);
-        this.cap.move();
-    }
 }
