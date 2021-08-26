@@ -6,7 +6,7 @@ public class Vec {
 
     public Vec(Dot startDot, Dot endDot){
         double size = Math.sqrt(Math.pow(startDot.getX() - endDot.getX(), 2) + Math.pow(startDot.getY() - endDot.getY(), 2));
-        this.x = (endDot.bright/Math.pow(size,2)) * (((endDot.getX() - startDot.getX())/size));
+        this.x = ((endDot.bright/Math.pow(size,2)) * (((endDot.getX() - startDot.getX())/size)));
         this.y = (endDot.bright/Math.pow(size,2)) * (((endDot.getY() - startDot.getY())/size));
     }
 

@@ -20,15 +20,19 @@ public class Squad extends HashSet<Unit> implements Voisko {
 
     @Override
     public Landshaft checkLand(){
-        this.landshaft.clear();
+        Landshaft old = new Landshaft();
+        for (Dot dot : this.landshaft){
+            if (dot.bright > 4){
+                old.add(dot);
+            }
+        }
+        this.landshaft.removeAll(old);
+        old.clear();
         this.tryToCon();
         this.cap.changeCap();
         this.cap.notifyObservers(Comands.Land);
         this.landshaft.addAll(this.cap.checkLand());
         Mapping.setMapBright(this);
-        for(Dot dot : this.landshaft){
-            dot.bright = 0;
-        }
         return this.landshaft;
     }
 
@@ -60,6 +64,7 @@ public class Squad extends HashSet<Unit> implements Voisko {
         this.cap.changeCap();
         this.cap.notifyObservers(Comands.Go);
         this.cap.go();
+        this.checkLand();
     }
 
     @Override
@@ -89,7 +94,7 @@ public class Squad extends HashSet<Unit> implements Voisko {
         this.findLand = new Landshaft();
         Dot mid = this.findMid();
         for (Dot dot : Mapping.getAllDots()){
-            if (Dot.distance(mid,dot) < (this.size()*Unit.view)){
+            if (Dot.distance(mid,dot) < ((this.size()*Unit.view)/2)){
                 this.findLand.add(dot);
             }
         }

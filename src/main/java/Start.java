@@ -19,10 +19,12 @@ public class Start {
         squad.add(unit);
         squad.add(unit1);
         squad.add(unit2);
-        squad.show();
-        Mapping.showBright();
-        squad.checkLand();
-        Mapping.showBright();
+        squad.setFindLand();
+        for (int i = 0; i < 10;  i++) {
+            squad.go();
+            squad.show();
+            System.out.println();
         }
     }
+}
 

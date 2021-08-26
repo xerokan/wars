@@ -11,7 +11,7 @@ public class Dot {
         this.x = x;
         this.y = y;
         this.type = type;
-        this.bright = 10;
+        this.bright = 2;
     }
 
     public void setType(int type){

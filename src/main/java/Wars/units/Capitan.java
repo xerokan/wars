@@ -11,6 +11,7 @@ public class Capitan extends Unit {
 
     public Capitan(Dot dot) {
         super(dot);
+        this.capCon = true;
         this.position = dot;
         Mapping.getDot(this.position.getX(), this.position.getY()).setType(3);
     }

@@ -15,12 +15,10 @@ public class Mapping {
             for (int j = 0; j < y; j++){
                 Dot dot = new Dot(i,j,0);
                 map[i][j] = dot;
-                if (dot.y == dot.x){
-                    dot.setType(1);
-                }
             }
         }
     }
+
 
     public static Dot getDot(int x, int y){
         if ((x <= Mapping.x && x >= 0) && (y <= Mapping.y && y >= 0)) {
@@ -50,7 +48,7 @@ public class Mapping {
     public static void setMapBright(Squad squad){
         for (int i = 0; i <= x; i++) {
             for (int j = 0; j <= y; j++) {
-                if (squad.contains(map[j][i]) == false && map[j][i].bright <= 20) {
+                if (squad.contains(map[j][i]) == false && map[j][i].bright <= 5) {
                     map[j][i].bright += 1;
                 }
             }

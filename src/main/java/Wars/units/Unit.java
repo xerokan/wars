@@ -21,6 +21,7 @@ public class Unit extends Observable implements Observer, Voisko {
     protected boolean unitCon;
     public Landshaft land = new Landshaft();
     final static int view = 3;
+    final static int hear = 4;
 
     public Unit(Dot position) {
         super();
@@ -32,20 +33,49 @@ public class Unit extends Observable implements Observer, Voisko {
         this.vec = new Vec(0,0);
     }
 
-    public void findWay(){
-
+    public void setBrihht(){
+        this.bright = 0;
+        for (Dot dot : this.squad.findLand){
+            if (dot != this.position) {
+                this.bright += dot.bright / Math.pow(Dot.distance(this.position, dot), 2);
+            }
+        }
+        if(this.bright >= 20){
+            this.bright = 20;
+        }
     }
 
+    public void setVec(){
+        this.vec = new Vec(0,0);
+        for (Dot dot : this.squad.findLand){
+            if (dot != this.position) {
+                this.vec = Vec.summ(this.vec, new Vec(this.position, dot));
+            }
+        }
+    }
 
 
     @Override
     public Landshaft checkLand() {
         this.land.clear();
         this.land.add(this.position);
+        this.position.bright = 0;
         this.land.add(Mapping.getDot(this.position.getX() + 1, this.position.getY()));
+        if (Mapping.getDot(this.position.getX() + 1, this.position.getY()) != null) {
+            Mapping.getDot(this.position.getX() + 1, this.position.getY()).bright = 0;
+        }
         this.land.add(Mapping.getDot(this.position.getX(), this.position.getY() + 1));
+        if (Mapping.getDot(this.position.getX(), this.position.getY() + 1) != null) {
+            Mapping.getDot(this.position.getX(), this.position.getY() + 1).bright = 0;
+        }
         this.land.add(Mapping.getDot(this.position.getX() - 1, this.position.getY()));
+        if (Mapping.getDot(this.position.getX() - 1, this.position.getY()) != null) {
+            Mapping.getDot(this.position.getX() - 1, this.position.getY()).bright = 0;
+        }
         this.land.add(Mapping.getDot(this.position.getX(), this.position.getY() - 1));
+        if (Mapping.getDot(this.position.getX(), this.position.getY() - 1) != null) {
+            Mapping.getDot(this.position.getX(), this.position.getY() - 1).bright = 0;
+        }
         return this.land;
     }
 
@@ -53,7 +83,7 @@ public class Unit extends Observable implements Observer, Voisko {
         this.setChanged();
         this.notifyObservers(Comands.Delete);
         super.deleteObservers();
-        if (Dot.distance(this.position, this.squad.cap.position)<= this.view) {
+        if (Dot.distance(this.position, this.squad.cap.position)<= this.hear) {
             this.capCon = true;
             this.unitCon = false;
             squad.cap.addObserver(this);
@@ -71,7 +101,7 @@ public class Unit extends Observable implements Observer, Voisko {
         this.notifyObservers(Comands.Delete);
         super.deleteObservers();
         for (Unit unit : squad) {
-            if (!(unit instanceof Capitan) && (unit != this) && (unit.capCon == true || unit.unitCon == true) && (Dot.distance(this.position, unit.position)) <= this.view) {
+            if (!(unit instanceof Capitan) && (unit != this) && (unit.capCon == true || unit.unitCon == true) && (Dot.distance(this.position, unit.position)) <= this.hear) {
                 unit.addObserver(this);
                 this.unitCon = true;
                 this.obs = unit;
@@ -136,7 +166,6 @@ public class Unit extends Observable implements Observer, Voisko {
             dot.setType(2);
             this.position.setType(0);
             this.position = dot;
-            dot.bright = this.bright;
             this.squad.chain = true;
             this.vec = new Vec(0,0);
             this.checkLand();
@@ -146,6 +175,8 @@ public class Unit extends Observable implements Observer, Voisko {
 
 
     public void go(){
+        this.setBrihht();
+        this.setVec();
         if(this.vec.x >= 0 && this.vec.x >= this.vec.y){
             this.setMove(new Right());
         } else if(this.vec.x < 0 && -this.vec.x >= this.vec.y){
