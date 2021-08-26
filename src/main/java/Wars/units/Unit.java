@@ -20,7 +20,7 @@ public class Unit extends Observable implements Observer, Voisko {
     protected boolean capCon;
     protected boolean unitCon;
     public Landshaft land = new Landshaft();
-    final static int view = 3;
+    final static int view = 2;
     final static int hear = 4;
 
     public Unit(Dot position) {
@@ -33,14 +33,19 @@ public class Unit extends Observable implements Observer, Voisko {
         this.vec = new Vec(0,0);
     }
 
-    public void setBrihht(){
+    public void setBright(){
         this.bright = 0;
         for (Dot dot : this.squad.findLand){
             if (dot != this.position) {
                 this.bright += dot.bright / Math.pow(Dot.distance(this.position, dot), 2);
             }
         }
-        if(this.bright >= 20){
+        for (Unit unit : this.squad){
+            if(unit != this) {
+                this.bright += unit.bright / Math.pow(Dot.distance(this.position, unit.position), 2);
+            }
+        }
+        if(this.bright > 20){
             this.bright = 20;
         }
     }
@@ -52,6 +57,11 @@ public class Unit extends Observable implements Observer, Voisko {
                 this.vec = Vec.summ(this.vec, new Vec(this.position, dot));
             }
         }
+        for (Unit unit : this.squad){
+            if (unit != this) {
+                this.vec = Vec.summ(this.vec, new Vec(this.position, unit.position));
+            }
+        }
     }
 
 
@@ -60,21 +70,23 @@ public class Unit extends Observable implements Observer, Voisko {
         this.land.clear();
         this.land.add(this.position);
         this.position.bright = 0;
-        this.land.add(Mapping.getDot(this.position.getX() + 1, this.position.getY()));
-        if (Mapping.getDot(this.position.getX() + 1, this.position.getY()) != null) {
-            Mapping.getDot(this.position.getX() + 1, this.position.getY()).bright = 0;
-        }
-        this.land.add(Mapping.getDot(this.position.getX(), this.position.getY() + 1));
-        if (Mapping.getDot(this.position.getX(), this.position.getY() + 1) != null) {
-            Mapping.getDot(this.position.getX(), this.position.getY() + 1).bright = 0;
-        }
-        this.land.add(Mapping.getDot(this.position.getX() - 1, this.position.getY()));
-        if (Mapping.getDot(this.position.getX() - 1, this.position.getY()) != null) {
-            Mapping.getDot(this.position.getX() - 1, this.position.getY()).bright = 0;
-        }
-        this.land.add(Mapping.getDot(this.position.getX(), this.position.getY() - 1));
-        if (Mapping.getDot(this.position.getX(), this.position.getY() - 1) != null) {
-            Mapping.getDot(this.position.getX(), this.position.getY() - 1).bright = 0;
+        for (int i = 1; i < view; i++) {
+            this.land.add(Mapping.getDot(this.position.getX() + i, this.position.getY()));
+            if (Mapping.getDot(this.position.getX() + i, this.position.getY()) != null) {
+                Mapping.getDot(this.position.getX() + i, this.position.getY()).bright = 0;
+            }
+            this.land.add(Mapping.getDot(this.position.getX(), this.position.getY() + i));
+            if (Mapping.getDot(this.position.getX(), this.position.getY() + i) != null) {
+                Mapping.getDot(this.position.getX(), this.position.getY() + i).bright = 0;
+            }
+            this.land.add(Mapping.getDot(this.position.getX() - i, this.position.getY()));
+            if (Mapping.getDot(this.position.getX() - i, this.position.getY()) != null) {
+                Mapping.getDot(this.position.getX() - i, this.position.getY()).bright = 0;
+            }
+            this.land.add(Mapping.getDot(this.position.getX(), this.position.getY() - i));
+            if (Mapping.getDot(this.position.getX(), this.position.getY() - i) != null) {
+                Mapping.getDot(this.position.getX(), this.position.getY() - i).bright = 0;
+            }
         }
         return this.land;
     }
@@ -175,15 +187,15 @@ public class Unit extends Observable implements Observer, Voisko {
 
 
     public void go(){
-        this.setBrihht();
+        this.setBright();
         this.setVec();
-        if(this.vec.x >= 0 && this.vec.x >= this.vec.y){
+        if(this.vec.x >= 0 && ((this.vec.y >=0 && this.vec.x >= this.vec.y) || (this.vec.y < 0 && this.vec.x >= -this.vec.y))){
             this.setMove(new Right());
-        } else if(this.vec.x < 0 && -this.vec.x >= this.vec.y){
+        } else if(this.vec.x < 0 && ((this.vec.y > 0 && -this.vec.x>this.vec.y) || (this.vec.y < 0 && this.vec.x < this.vec.y))){
             this.setMove(new Left());
-        }else if (this.vec.y >= 0 && this.vec.y > this.vec.x){
+        }else if (this.vec.y >= 0 && ((this.vec.x > 0 && this.vec.y > this.vec.x) || (this.vec.x < 0 && this.vec.y > -this.vec.x))){
             this.setMove(new Down());
-        }else if(this.vec.y < 0 && -this.vec.y > this.vec.x){
+        }else if(this.vec.y < 0 && ((this.vec.x > 0 && -this.vec.y > this.vec.x) || (this.vec.x < 0 && this.vec.y < this.vec.x))){
             setMove(new Up());
         }
         if(this.move != null) {

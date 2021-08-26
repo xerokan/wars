@@ -48,7 +48,7 @@ public class Mapping {
     public static void setMapBright(Squad squad){
         for (int i = 0; i <= x; i++) {
             for (int j = 0; j <= y; j++) {
-                if (squad.contains(map[j][i]) == false && map[j][i].bright <= 5) {
+                if (squad.contains(map[j][i]) == false && map[j][i].bright <= 10) {
                     map[j][i].bright += 1;
                 }
             }

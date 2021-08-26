@@ -22,7 +22,7 @@ public class Squad extends HashSet<Unit> implements Voisko {
     public Landshaft checkLand(){
         Landshaft old = new Landshaft();
         for (Dot dot : this.landshaft){
-            if (dot.bright > 4){
+            if (dot.bright >= 5){
                 old.add(dot);
             }
         }
@@ -94,7 +94,7 @@ public class Squad extends HashSet<Unit> implements Voisko {
         this.findLand = new Landshaft();
         Dot mid = this.findMid();
         for (Dot dot : Mapping.getAllDots()){
-            if (Dot.distance(mid,dot) < (this.size()*Unit.view)){
+            if (Dot.distance(mid,dot) < (this.size()*Unit.view)/2){
                 this.findLand.add(dot);
             }
         }
