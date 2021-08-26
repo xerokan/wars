@@ -73,8 +73,8 @@ public class Squad extends HashSet<Unit> implements Voisko {
         for (int i = 0; i <= Mapping.x; i++){
             for (int j = 0; j <= Mapping.y; j++){
                if (this.landshaft.contains(Mapping.getDot(j,i))){
-                   System.out.print(Mapping.getDot(j,i).getType()+"   ");
-               }else System.out.print("X   ");
+                   System.out.print(Mapping.getDot(j,i).getDot()+" ");
+               }else System.out.print(". ");
             }
             System.out.println();
         }
@@ -94,7 +94,7 @@ public class Squad extends HashSet<Unit> implements Voisko {
         this.findLand = new Landshaft();
         Dot mid = this.findMid();
         for (Dot dot : Mapping.getAllDots()){
-            if (Dot.distance(mid,dot) < ((this.size()*Unit.view)/2)){
+            if (Dot.distance(mid,dot) < (this.size()*Unit.view)){
                 this.findLand.add(dot);
             }
         }
