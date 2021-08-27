@@ -1,4 +1,4 @@
-package Wars.UStrats;
+package Wars.moves;
 
 import Wars.Landshaft.Mapping;
 import Wars.units.Unit;

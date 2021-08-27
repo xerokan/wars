@@ -3,6 +3,6 @@ package Wars;
 public enum Comands {
     Delete,
     Land,
-    Go,
+    Find,
     Connection
 }

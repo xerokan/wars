@@ -1,11 +1,7 @@
-package Wars.UStrats;
+package Wars.moves;
 
-import Wars.Comands;
 import Wars.Landshaft.Mapping;
-import Wars.units.Squad;
 import Wars.units.Unit;
-
-import java.util.Calendar;
 
 public class Right implements Move {
 

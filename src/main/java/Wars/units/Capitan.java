@@ -1,6 +1,7 @@
 package Wars.units;
 
 
+import Wars.Comands;
 import Wars.Landshaft.Dot;
 import Wars.Landshaft.Mapping;
 
@@ -8,10 +9,8 @@ import java.util.Observable;
 
 public class Capitan extends Unit {
 
-
     public Capitan(Dot dot) {
         super(dot);
-        this.capCon = true;
         this.position = dot;
         Mapping.getDot(this.position.getX(), this.position.getY()).setType(3);
     }
@@ -26,6 +25,8 @@ public class Capitan extends Unit {
             dot.setType(3);
             this.position.setType(0);
             this.position = dot;
+            this.squad.chain = true;
+            this.checkLand();
         }
         return;
     }

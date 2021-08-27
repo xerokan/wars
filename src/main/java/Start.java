@@ -1,6 +1,4 @@
 import Wars.Landshaft.Mapping;
-import Wars.UStrats.Left;
-import Wars.UStrats.Right;
 import Wars.units.Capitan;
 import Wars.units.Squad;
 import Wars.units.Unit;

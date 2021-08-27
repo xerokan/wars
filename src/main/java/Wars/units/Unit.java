@@ -5,13 +5,17 @@ import Wars.Landshaft.Dot;
 import Wars.Landshaft.Landshaft;
 import Wars.Landshaft.Mapping;
 import Wars.Landshaft.Vec;
-import Wars.UStrats.*;
+import Wars.moves.*;
+import Wars.strats.Find;
+import Wars.strats.Land;
+import Wars.strats.Strat;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public class Unit extends Observable implements Observer, Voisko {
-    protected Move move;
+    public Move move;
+    protected Strat strat;
     public Vec vec;
     public double bright;
     public Dot position;
@@ -67,7 +71,6 @@ public class Unit extends Observable implements Observer, Voisko {
 
     @Override
     public Landshaft checkLand() {
-        this.land.clear();
         this.land.add(this.position);
         this.position.bright = 0;
         for (int i = 1; i < view; i++) {
@@ -92,16 +95,13 @@ public class Unit extends Observable implements Observer, Voisko {
     }
 
     public boolean tryToConCap() {
-        this.setChanged();
-        this.notifyObservers(Comands.Delete);
-        super.deleteObservers();
         if (Dot.distance(this.position, this.squad.cap.position)<= this.hear) {
             this.capCon = true;
             this.unitCon = false;
-            squad.cap.addObserver(this);
             if(this.obs != null) {
                 this.obs.deleteObserver(this);
             }
+            squad.cap.addObserver(this);
             this.obs = squad.cap;
             return true;
         }
@@ -109,9 +109,6 @@ public class Unit extends Observable implements Observer, Voisko {
     }
 
     public boolean tryToConUnit(){
-        this.setChanged();
-        this.notifyObservers(Comands.Delete);
-        super.deleteObservers();
         for (Unit unit : squad) {
             if (!(unit instanceof Capitan) && (unit != this) && (unit.capCon == true || unit.unitCon == true) && (Dot.distance(this.position, unit.position)) <= this.hear) {
                 unit.addObserver(this);
@@ -138,21 +135,24 @@ public class Unit extends Observable implements Observer, Voisko {
     @Override
     public void update(Observable cap, Object arg) {
         if (arg == Comands.Delete) {
-            this.unitCon = false;
+            this.setChanged();
+            this.obs.deleteObserver(this);
+            this.obs = null;
             this.capCon = false;
+            this.unitCon = false;
+            this.squad.chain = true;
             this.notifyObservers(Comands.Delete);
-            super.deleteObservers();
+            this.deleteObservers();
         }
         if (arg == Comands.Land) {
             this.setChanged();
-            this.notifyObservers(arg);
-            this.squad.landshaft.addAll(this.checkLand());
+            this.notifyObservers(Comands.Land);
+            this.strat = new Land();
         }
-        if (arg == Comands.Go){
+        if (arg == Comands.Find){
             this.setChanged();
-            this.notifyObservers(Comands.Go);
-            this.go();
-
+            this.notifyObservers(Comands.Find);
+            this.strat = (new Find());
         }
     }
 
@@ -178,28 +178,25 @@ public class Unit extends Observable implements Observer, Voisko {
             dot.setType(2);
             this.position.setType(0);
             this.position = dot;
-            this.squad.chain = true;
             this.vec = new Vec(0,0);
             this.checkLand();
         }
         return;
     }
 
-
-    public void go(){
-        this.setBright();
-        this.setVec();
-        if(this.vec.x >= 0 && ((this.vec.y >=0 && this.vec.x >= this.vec.y) || (this.vec.y < 0 && this.vec.x >= -this.vec.y))){
-            this.setMove(new Right());
-        } else if(this.vec.x < 0 && ((this.vec.y > 0 && -this.vec.x>this.vec.y) || (this.vec.y < 0 && this.vec.x < this.vec.y))){
-            this.setMove(new Left());
-        }else if (this.vec.y >= 0 && ((this.vec.x > 0 && this.vec.y > this.vec.x) || (this.vec.x < 0 && this.vec.y > -this.vec.x))){
-            this.setMove(new Down());
-        }else if(this.vec.y < 0 && ((this.vec.x > 0 && -this.vec.y > this.vec.x) || (this.vec.x < 0 && this.vec.y < this.vec.x))){
-            setMove(new Up());
-        }
-        if(this.move != null) {
-            this.move.move(this);
+    @Override
+    public void disconnect(){
+        if(this.obs != null) {
+            if (Dot.distance(this.position, ((Unit) this.obs).position) >= this.hear && !(this instanceof Capitan)) {
+                this.setChanged();
+                this.obs.deleteObserver(this);
+                this.obs = null;
+                this.capCon = false;
+                this.unitCon = false;
+                this.squad.chain = true;
+                this.notifyObservers(Comands.Delete);
+                this.deleteObservers();
+            }
         }
     }
 }

@@ -1,16 +1,15 @@
 package Wars.units;
 
 import Wars.Landshaft.Landshaft;
-import Wars.UStrats.Move;
 
 public interface Voisko {
 
-    public Landshaft checkLand();
+     Landshaft checkLand();
 
-    public void show();
+     void show();
 
-    public boolean tryToCon();
+     boolean tryToCon();
 
-    public void go();
+     void disconnect();
 
 }

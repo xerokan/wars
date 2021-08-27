@@ -4,12 +4,13 @@ import Wars.Comands;
 import Wars.Landshaft.Dot;
 import Wars.Landshaft.Landshaft;
 import Wars.Landshaft.Mapping;
-import Wars.UStrats.Move;
+import Wars.strats.Find;
+import Wars.strats.Land;
 
 import java.util.HashSet;
 
 public class Squad extends HashSet<Unit> implements Voisko {
-    protected static boolean chain;
+    protected boolean chain;
     public Capitan cap;
     public Landshaft landshaft = new Landshaft();
     protected Landshaft findLand;
@@ -27,11 +28,14 @@ public class Squad extends HashSet<Unit> implements Voisko {
             }
         }
         this.landshaft.removeAll(old);
-        old.clear();
-        this.tryToCon();
         this.cap.changeCap();
         this.cap.notifyObservers(Comands.Land);
-        this.landshaft.addAll(this.cap.checkLand());
+        this.cap.strat = new Land();
+        for (Unit unit : this){
+            if(unit.strat instanceof Land){
+                unit.strat.execute(unit);
+            }
+        }
         Mapping.setMapBright(this);
         return this.landshaft;
     }
@@ -39,7 +43,7 @@ public class Squad extends HashSet<Unit> implements Voisko {
     @Override
     public boolean add(Unit unit) {
         unit.squad = this;
-        this.chain=true;
+        this.chain = true;
         super.add(unit);
         this.tryToCon();
          return true;
@@ -59,17 +63,29 @@ public class Squad extends HashSet<Unit> implements Voisko {
         return super.remove(unit);
     }
 
-    @Override
     public void go () {
         this.cap.changeCap();
-        this.cap.notifyObservers(Comands.Go);
-        this.cap.go();
+        this.cap.notifyObservers(Comands.Find);
+        this.cap.strat = new Find();
+        for (Unit unit : this){
+            if(unit.strat != null) {
+                unit.strat.execute(unit);
+            }
+        }
+        this.disconnect();
+        this.tryToCon();
         this.checkLand();
     }
 
     @Override
+    public void disconnect(){
+        for (Unit unit : this){
+            unit.disconnect();
+        }
+    }
+
+    @Override
     public void show(){
-        this.checkLand();
         for (int i = 0; i <= Mapping.x; i++){
             for (int j = 0; j <= Mapping.y; j++){
                if (this.landshaft.contains(Mapping.getDot(j,i))){
@@ -106,7 +122,7 @@ public class Squad extends HashSet<Unit> implements Voisko {
         while (this.chain) {
             this.chain=false;
             for (Unit unit : this) {
-                if (unit.unitCon == false && unit.capCon == false) {
+                if (unit.unitCon == false && unit.capCon == false && !(unit instanceof Capitan)) {
                     if (unit.tryToCon()) {
                         this.chain = true;
                     }
