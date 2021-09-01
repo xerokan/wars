@@ -4,10 +4,14 @@ import Wars.Comands;
 import Wars.Landshaft.Dot;
 import Wars.Landshaft.Landshaft;
 import Wars.Landshaft.Mapping;
+import Wars.Landshaft.TypeOfDots;
 import Wars.strats.Find;
 import Wars.strats.Land;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Squad extends HashSet<Unit> implements Voisko {
     protected boolean chain;
@@ -21,13 +25,13 @@ public class Squad extends HashSet<Unit> implements Voisko {
 
     @Override
     public Landshaft checkLand(){
-        Landshaft old = new Landshaft();
-        for (Dot dot : this.landshaft){
+        Set old = new HashSet<Dot>();
+        for (Dot dot : this.landshaft.keySet()){
             if (dot.bright >= 5){
                 old.add(dot);
             }
         }
-        this.landshaft.removeAll(old);
+        this.landshaft.keySet().removeAll(old);
         this.cap.changeCap();
         this.cap.notifyObservers(Comands.Land);
         this.cap.strat = new Land();
@@ -88,8 +92,8 @@ public class Squad extends HashSet<Unit> implements Voisko {
     public void show(){
         for (int i = 0; i <= Mapping.x; i++){
             for (int j = 0; j <= Mapping.y; j++){
-               if (this.landshaft.contains(Mapping.getDot(j,i))){
-                   System.out.print(Mapping.getDot(j,i).getDot()+" ");
+               if (this.landshaft.keySet().contains(Mapping.getDotXY(j,i))){
+                   System.out.print(this.landshaft.getDotByXY(j,i).getDotShowLand(this.landshaft)+ " ");
                }else System.out.print(". ");
             }
             System.out.println();
@@ -103,15 +107,15 @@ public class Squad extends HashSet<Unit> implements Voisko {
             x += unit.position.getX();
             y += unit.position.getY();
         }
-        return Mapping.getDot( Math.round(x/this.size()),Math.round(y/this.size()));
+        return Mapping.getDotXY( Math.round(x/this.size()),Math.round(y/this.size()));
     }
 
     public void setFindLand(){
         this.findLand = new Landshaft();
         Dot mid = this.findMid();
-        for (Dot dot : Mapping.getAllDots()){
-            if (Dot.distance(mid,dot) < (this.size()*Unit.view)/2){
-                this.findLand.add(dot);
+        for (Dot dot : Mapping.getAllDots().keySet()){
+            if (Dot.distance(mid,dot) < (this.size()*Unit.view)){
+                this.findLand.put(dot, TypeOfDots.Unknown);
             }
         }
 

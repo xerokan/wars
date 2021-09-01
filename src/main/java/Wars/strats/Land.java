@@ -6,7 +6,7 @@ public class Land implements Strat{
 
     @Override
     public void execute(Unit unit) {
-        unit.squad.landshaft.addAll(unit.land);
+        unit.squad.landshaft.putAll(unit.land);
         unit.land.clear();
     }
 }

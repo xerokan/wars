@@ -1,32 +1,45 @@
 package Wars.Landshaft;
 
 public class Dot {
-    final int x;
-    final int y;
-    private int type;
+    private final int x;
+    private final int y;
     public double bright;
+    public int type;
 
 
-    public Dot(int x, int y, int type) {
+    public Dot(int x, int y) {
         this.x = x;
         this.y = y;
-        this.type = type;
-        this.bright = 2;
+        this.bright = 10;
+        this.type = 0;
     }
 
-    public void setType(int type){
-        this.type = type;
+    public TypeOfDots getTypeMap(){
+        return Mapping.getDotType(this);
     }
 
-    public int getType(){
-        return this.type;
+    public TypeOfDots getTypeLand(Landshaft land){
+        return land.get(this);
     }
 
-    public String getDot(){
-        switch (this.getType()){
-            case (0): return " ";
-            case (2): return "+";
-            case (3): return "*";
+    public void setTypeMap(TypeOfDots type){
+        Mapping.map1.put(this, type);
+    }
+
+    public String getDotShowMap(){
+        switch (this.getTypeMap()){
+            case Visible: return " ";
+            case Unit: return "+";
+            case Capitan: return "*";
+            default: return "x";
+        }
+    }
+
+    public String getDotShowLand(Landshaft land){
+        switch (this.getTypeLand(land)){
+            case Visible: return " ";
+            case Unit: return "+";
+            case Capitan: return "*";
             default: return "x";
         }
     }

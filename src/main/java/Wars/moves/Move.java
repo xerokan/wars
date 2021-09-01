@@ -1,7 +1,8 @@
 package Wars.moves;
 
+import Wars.Landshaft.Dot;
 import Wars.units.Unit;
 
 public interface Move {
-    public void move(Unit unit);
+     Dot move(Unit unit);
 }

@@ -1,17 +1,18 @@
 package Wars.moves;
 
+import Wars.Landshaft.Dot;
 import Wars.Landshaft.Mapping;
 import Wars.units.Unit;
 
 public class Right implements Move {
 
-    public void right(Unit unit) {
-        unit.setPosition(Mapping.getDot(unit.position.getX()+1, unit.position.getY()));
+    public Dot right(Unit unit) {
+       return Mapping.getDotXY(unit.position.getX()+1, unit.position.getY());
     }
 
     @Override
-    public void move(Unit unit) {
-        right(unit);
+    public Dot move(Unit unit) {
+       return right(unit);
     }
 
 }

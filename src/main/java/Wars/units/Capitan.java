@@ -4,6 +4,7 @@ package Wars.units;
 import Wars.Comands;
 import Wars.Landshaft.Dot;
 import Wars.Landshaft.Mapping;
+import Wars.Landshaft.TypeOfDots;
 
 import java.util.Observable;
 
@@ -12,7 +13,7 @@ public class Capitan extends Unit {
     public Capitan(Dot dot) {
         super(dot);
         this.position = dot;
-        Mapping.getDot(this.position.getX(), this.position.getY()).setType(3);
+        Mapping.getDotXY(this.position.getX(), this.position.getY()).setTypeMap(TypeOfDots.Capitan);
     }
 
     public void changeCap(){
@@ -21,9 +22,9 @@ public class Capitan extends Unit {
 
     @Override
     public void setPosition(Dot dot){
-        if (dot != null && dot.getType() == 0) {
-            dot.setType(3);
-            this.position.setType(0);
+        if (dot != null && dot.getTypeMap() == TypeOfDots.Visible) {
+            dot.setTypeMap(TypeOfDots.Capitan);
+            this.position.setTypeMap(TypeOfDots.Visible);
             this.position = dot;
             this.squad.chain = true;
             this.checkLand();
